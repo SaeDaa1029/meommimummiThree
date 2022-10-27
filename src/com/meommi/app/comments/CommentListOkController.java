@@ -25,11 +25,9 @@ public class CommentListOkController implements Execute {
 		PrintWriter out=resp.getWriter();
 		JSONArray jsonArray=new JSONArray();
 		int startIndex=Integer.valueOf(req.getParameter("Increment"));
-		int temp=Integer.parseInt(req.getParameter("Increment"));
 		
 		HashMap<String,Integer> increment=new HashMap<String, Integer>();
 		increment.put("startIndex", startIndex);
-		increment.put("endIndex", 1);
 		
 		commentsDAO.selectCommentRow(increment).forEach(comments->{
 			JSONObject jsonObject =new JSONObject(comments);  jsonArray.put(jsonObject);

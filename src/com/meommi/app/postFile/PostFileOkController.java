@@ -18,6 +18,8 @@ public class PostFileOkController implements Execute {
 
 	@Override
 	public Result execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setCharacterEncoding("utf-8");
+		req.setCharacterEncoding("utf-8");
 		PostFileDAO postfileDAO=new PostFileDAO();
 		int startIndex=Integer.valueOf(req.getParameter("Increment"));
 		PrintWriter out=resp.getWriter();
@@ -25,6 +27,7 @@ public class PostFileOkController implements Execute {
 		postfileDAO.selectPostfileRow(startIndex).forEach(postfile->{
 			JSONObject fileobject=new JSONObject(postfile); jsonArray.put(fileobject);
 		});
+		System.out.println(jsonArray.toString());
 		out.print(jsonArray.toString());
 		out.close();
 		return null;

@@ -1053,10 +1053,6 @@ var Increment=0;
 		})//ajax(success:post)
 	
 }
-    
-    
-    
-
 </script>
 
 </html>
