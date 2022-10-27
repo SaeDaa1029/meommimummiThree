@@ -15,12 +15,12 @@
         rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/community/community.css">
 </head>
-
 <body>
 <%
        String userId = (String)session.getAttribute("userId");
-	   /* int userNumber = Integer.valueOf(session.getAttribute("userNumber")); */
-	   int usernumber=3;
+	   int userNumberss = Integer.valueOf(String.valueOf(session.getAttribute("userNumber")));
+	   /* int userNumber=3; */
+	   System.out.println("userNumber:"+userNumberss);
        boolean loginOk = userId == null ? false : true;
        if(loginOk){ %>
        <jsp:include page = '${pageContext.request.contextPath}/app/fix/header_MainLogin.jsp'/>
@@ -28,6 +28,7 @@
       <jsp:include page = '${pageContext.request.contextPath}/app/fix/header.jsp'/>
    <% } %>
 	<main>
+<script></script>
 		<div id="page">
 			<div id="app-container">
 				<div id="app-content">
@@ -301,11 +302,11 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/community/community.js"></script>
+<script>let userNumber = "${sessionScope.userNumber}"</script>
 <script>var $context = "${pageContext.request.contextPath}"</script>
 <script>var $requestURL = "${pageContext.request.requestURL}"</script>
 <script>var $requestURI = "${pageContext.request.requestURI}"</script>
 <script>
-
 let postContentContains=true;
 let commentContentContains=true;
 //문서가 로드될때 실행되는 함수(Render Tree 생성)
@@ -314,10 +315,7 @@ let commentContentContains=true;
 console.log("requestURL:"+$requestURL);
 console.log("requestURI:"+$requestURI);
 console.log("location.pathname:"+location.pathname); */
-$temp="C://gb_0900_lhy/jsp/workspace/runningtests/WebContent/";
-var jsonPost="";
-var jsonComment="";
-var jsonFile="";
+
 //ajax를 통해 동적으로 추가되는 요소들의 기준점이 되는 부모요소(statictag)
 $parentposition=$(".FeedCardList_container__13rc1");
 
@@ -391,8 +389,9 @@ function showDefault(){
 }
 
 function showDefaultList(resultpost,resultcomment,resultfile){
-	$parentposition.replaceAll("");
+	
 	resultpost.forEach(post=>{
+		console.log("userNumber:"+userNumber+"|"+"post.userNumber:"+post.userNumber);
 		textinit+=`<div class="FeedCard_container__2vyLX">
 		<section class="FeedCard_header__3R2hC">
 		<a href="/web/wmypage/myprofile/fundinglist/1152357015"
@@ -443,27 +442,29 @@ function showDefaultList(resultpost,resultcomment,resultfile){
 		    data-ec-brand="태산레져" data-ec-usertype="SUPPORTER"
 		    data-ec-feedtype="SATISFACTION" data-ec-contenttype="store">
 		 </a>`;
+		 if(post.userNumber==userNumber){
 		 	textinit+=`<div class="postContents" name="postContents" data-index="0">`;
             textinit+=`<span class="postContentReadyModifyWrap" data-number=`+post.postNumber+`><div class="postContentReadyModify"></div></span>`;
             textinit+=`<span class="postContentModifyWrap" style="display:none;" data-number=`+post.postNumber+`><div class="postContentModify"></div></span>`;
             textinit+=`<span class="postContentDeleteWrap" data-number=`+post.postNumber+`><div class="postContentDelete"></div></span>`;
             textinit+=`<span class="postContentCancelWrap" style="display:none;" data-number=`+post.postNumber+`><div class="postContentCancel"></div></span>`;
         	textinit+=`</div>`;
+		 }
 		    textinit+=`<div class="replyWrap">
 		        <a href="replyContents" class="replyShow">댓글 보기 ▼</a>`;
 		        resultcomment.forEach(comment=>{
 		        	if(comment.postNumber==post.postNumber){console.log("comment.postNumber:"+comment.postNumber);
-						if(comment.userNumber==3){
 		        		textinit+=`<div class="replyContents" name="replyContents" style="display:none;" data-index="0">
 		        			<span class="replyIdWrap"><div class="replyId">`+comment.userId+`</div></span>`;
 		        			textinit+=`<span class="replyCommentWrap"><div class="replyComment">`+comment.commentsContent+`</div></span>`;
 		        			textinit+=`<span>`+comment.commentsDatetime+`</span>`;
+		        			if(comment.userNumber==userNumber){
 			        			textinit+=`<span class="replyCommentModifyReadyWrap" data-number=`+comment.commentsNumber+`><div class="replyCommentReadyModify"></div></span>`;
 			        			textinit+=`<span class="replyCommentModifyWrap" style="display:none;" data-number=`+comment.commentsNumber+`><div class="replyCommentModify"></div></span>`;
 			        			textinit+=`<span class="replyCommentDeleteWrap" data-number=`+comment.commentsNumber+`><div class="replyCommentDelete"></div></span>`;
 			        			textinit+=`<span class="replyCommentCancelWrap" style="display:none;" data-number=`+comment.commentsNumber+`><div class="replyCommentCancel"></div></span>`;
-			        			textinit+=`</div>`;
-						}
+							}
+			        	textinit+=`</div>`;
 		        	}
 		        });
 		        textinit+=`</div>
@@ -485,28 +486,32 @@ function showScrollDown(){
 	console.log(Outputindex);
 	console.log(Increment);
 	Increment+=1;
+	text="";
 	console.log("스크롤 다운 들어옴");
 	$.ajax({
 		url:"${pageContext.request.contextPath}/meommi/PostlistOk.po",
 		type:"get",
-		data:{Increment:Outputindex+Increment},
+		data:{Increment:Outputindex+Increment-1},
 		contentType:"text/html; charset=utf-8",
 		dataType:"json",
 		success:function(resultpost){
 			$.ajax({
 				url:"${pageContext.request.contextPath}/meommi/CommentlistOk.co",
 				type:"get",
-				data:{Increment:Outputindex+Increment},
+				data:{Increment:Outputindex+Increment-1},
 				contentType:"text/html; charset=utf-8",
 				dataType:"json",
 				success:function(resultcomment){
 					$.ajax({
 						url:"${pageContext.request.contextPath}/meommi/PostFileOk.pf",
 						type:"get",
-						data:{Increment:Outputindex+Increment},
+						data:{Increment:Outputindex+Increment-1},
 						contentType:"text/html; charset=utf-8",
 						dataType:"json",
 						success:function(resultfile){
+								console.log(resultpost);
+								console.log(resultcomment);
+								console.log(resultfile);
 							resultpost.forEach(post=>{
 							text+=`<div class="FeedCard_container__2vyLX">
 								<section class="FeedCard_header__3R2hC">
@@ -580,7 +585,7 @@ function showScrollDown(){
 								<section class="FeedCard_content__2ato7">
 								    <p class="FeedCard_comment__3PXr8 FeedCard_ellipsis2__uNpJo">`+post.postContent+`</p>`;
 								    /* text+=`<p class="FeedCard_showMore__1IK43">더보기</p>`; */
-								    text+=`<span class="FeedCard_date__nQ9NI">`+post.postDatetime+`</span>`;    
+								    text+=`<span class="FeedCard_date__nQ9NI">`+post.postDateTime+`</span>`;    
 								text+=`</section>
 								<a href="/web/store/detail/1921?_refer_section_st=feed_3"
 								    class="FeedCard_footer__2JOxv" data-ec-list="피드"
@@ -590,12 +595,14 @@ function showScrollDown(){
 								    data-ec-brand="태산레져" data-ec-usertype="SUPPORTER"
 								    data-ec-feedtype="SATISFACTION" data-ec-contenttype="store">
 								 </a>`;
+								 if(post.userNumber==userNumber){
 								 	text+=`<div class="postContents" name="postContents" data-index="0">`;
 						            text+=`<span class="postContentReadyModifyWrap" data-number=`+post.postNumber+`><div class="postContentReadyModify"></div></span>`;
 						            text+=`<span class="postContentModifyWrap" style="display:none;" data-number=`+post.postNumber+`><div class="postContentModify"></div></span>`;
 						            text+=`<span class="postContentDeleteWrap" data-number=`+post.postNumber+`><div class="postContentDelete"></div></span>`;
 						            text+=`<span class="postContentCancelWrap" style="display:none;" data-number=`+post.postNumber+`><div class="postContentCancel"></div></span>`;
 						        	text+=`</div>`;
+								 }
 								    text+=`<div class="replyWrap">
 								        <a href="replyContents" class="replyShow">댓글 보기 ▼</a>`;
 								        resultcomment.forEach(comment=>{
@@ -604,10 +611,12 @@ function showScrollDown(){
     									            <span class="replyIdWrap"><div class="replyId">`+comment.userId+`</div></span>`;
     									            text+=`<span class="replyCommentWrap"><div class="replyComment">`+comment.commentsContent+`</div></span>`;
     									            text+=`<span>`+comment.commentsDatetime+`</span>`;
-    									            text+=`<span class="replyCommentModifyReadyWrap" data-number=`+comment.commentsNumber+`><div class="replyCommentReadyModify"></div></span>`;
-    									            text+=`<span class="replyCommentModifyWrap" style="display:none;" data-number=`+comment.commentsNumber+`><div class="replyCommentModify"></div></span>`;
-    									            text+=`<span class="replyCommentDeleteWrap" data-number=`+comment.commentsNumber+`><div class="replyCommentDelete"></div></span>`;
-    									            text+=`<span class="replyCommentCancelWrap" style="display:none;" data-number=`+comment.commentsNumber+`><div class="replyCommentCancel"></div></span>`;
+    									            if(comment.userNumber==userNumber){console.log("correct!");
+	    									            text+=`<span class="replyCommentModifyReadyWrap" data-number=`+comment.commentsNumber+`><div class="replyCommentReadyModify"></div></span>`;
+	    									            text+=`<span class="replyCommentModifyWrap" style="display:none;" data-number=`+comment.commentsNumber+`><div class="replyCommentModify"></div></span>`;
+	    									            text+=`<span class="replyCommentDeleteWrap" data-number=`+comment.commentsNumber+`><div class="replyCommentDelete"></div></span>`;
+	    									            text+=`<span class="replyCommentCancelWrap" style="display:none;" data-number=`+comment.commentsNumber+`><div class="replyCommentCancel"></div></span>`;
+    									            }
     									        text+=`</div>`;
 								        	}
 								        });

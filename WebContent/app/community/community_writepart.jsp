@@ -85,7 +85,7 @@
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script>
 let postContent = $("textarea[name='feedMainWriting']").val();
-let userNumber = 1;
+/* let userNumber = 1; */
 let context = "${pageContext.request.contextPath}";
 
  

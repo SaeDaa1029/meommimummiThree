@@ -168,8 +168,8 @@ function getImageFiles(e) {
     $('.uploadPhotoCount').text(getText);
 
     });
-
-	$(".image-preview").removeChild('li');
+	console.log("aaa");
+	$(".image-preview ").find("img").remove();
 
   }
 
@@ -394,7 +394,6 @@ function resize(obj) {
 
 
 /*let postContent = $("textarea[name=feedMainWriting]").text();
-let userNumber = 1;
 let context = "${pageContext.request.contextPath}";*/
 
 //preventDefault 는 기본으로 정의된 이벤트를 작동하지 못하게 하는 메서드이다. submit을 막음 

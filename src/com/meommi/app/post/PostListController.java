@@ -27,6 +27,8 @@ public class PostListController implements Execute {
 		});
 		out.print(jsonArray.toString());
 		out.close();
+		System.out.println(req.getSession().getAttribute("userId"));
+		System.out.println(req.getSession().getAttribute("userNumber"));
 		return null;
 	}
 

@@ -19,7 +19,7 @@ public class PostListOkController implements Execute {
 	@Override
 	public Result execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setCharacterEncoding("utf-8");
-		int increment=6;
+		int increment=Integer.valueOf(req.getParameter("Increment"));
 		PostDAO postDAO=new PostDAO();
 		PrintWriter out=resp.getWriter();
 		JSONArray jsonArray=new JSONArray();
